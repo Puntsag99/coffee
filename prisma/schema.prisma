@@ -13,3 +13,52 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model User{
+  id Int @id @default(autoincrement())
+  email String @unique
+  password String
+  username String
+// receivedDonations Donation[]
+  createdAt DateTime @default(now())
+  profileid Int
+// bankCard BankCard?
+  updatedAt DateTime @updatedAt
+}
+
+model BankCard{
+  id Int @id @default(autoincrement())
+  country String
+  firstName String
+  lastName String
+  cardNumber String
+  expiryDate DateTime
+  userId Int @unique
+  createdAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model Profile {
+  id Int @id @default(autoincrement())
+  name String
+  about String
+  avatarImage String
+  socialMediaURL String
+  backgroundImage String
+  successMessage String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model Donation {
+  id Int @id @default(autoincrement())
+  amount Int
+  specialMessage String
+  socialURLOrBuyMeAcoffee String
+  donorId Int
+  recipientId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
