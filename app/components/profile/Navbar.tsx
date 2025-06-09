@@ -9,7 +9,7 @@ export const Navbar = () => {
   return (
     <div className="flex py-4 px-20 justify-between absolute w-full">
       <div className="flex gap-x-2 items-center justify-center">
-        <Image width={24} height={24} alt="fags" src="/img/coffee.svg" />
+        <Image width={24} height={24} alt="fags" src="/img/coffee.png" />
         <p className="font-normal text-base ">Buy Me Coffee</p>
       </div>
       {isSignedIn && (

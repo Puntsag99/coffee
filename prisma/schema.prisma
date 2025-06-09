@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model Donation {
+  id Int @id @default(autoincrement())
+  amount Int
+  donorId String
+  recepientId String
+  specialMessage String
+  socialURLorBuyMeCoffee String
+  updateAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+
+model BankCard {
+ id Int @id @default(autoincrement())
+ userId String
+  country String
+  firstName String
+  lastName String
+  cardNumber String
+  expiryDate DateTime
+  updateAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model Profile {
+   id Int @id @default(autoincrement())
+   name String
+   about String
+   avatarImage String
+   socialMediaURL String
+   backroundImage String
+   successMessage String
+   userId String
+   updatedAt DateTime @updatedAt
+   createdAt DateTime @default(now())
+}

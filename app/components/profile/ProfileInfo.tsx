@@ -6,6 +6,7 @@ import { saveProfile } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { StepProps } from "@/app/profile/page";
 import { Button } from "@/components/ui/button";
+import { any } from "zod";
 
 export const ProfileInfo = ({ addStep }: StepProps) => {
   const inputImageRef = useRef<HTMLInputElement | null>(null);
@@ -14,10 +15,11 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const result = await saveProfile(formData);
+    const result = await saveProfile(formData, userId);
 
     if (!result.success && result.errors) {
       setErrors(result.errors);
@@ -97,7 +99,7 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
               />
             </div>
           ) : (
-            <Image width={28} height={28} alt="camera" src="/img/camera.png" />
+            <Image width={28} height={28} alt="camera" src="/img/Vector.png" />
           )}
         </div>
         {errors.photo && <p className="text-red-500 text-sm">{errors.photo}</p>}
