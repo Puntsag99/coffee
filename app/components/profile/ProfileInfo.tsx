@@ -1,21 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { stepOneInfo } from "@/app/lib";
 import { useRef, useState } from "react";
-<<<<<<< HEAD
 import { saveProfile } from "@/app/actions";
-=======
-import { useFormState } from "react-dom";
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
 import { Input } from "@/components/ui/input";
 import { StepProps } from "@/app/profile/page";
 import { Button } from "@/components/ui/button";
-import { schemaStep, submitProfile } from "@/app/actions";
 
 export const ProfileInfo = ({ addStep }: StepProps) => {
+  const inputImageRef = useRef<HTMLInputElement | null>(null);
   const [previewLink, setPreviewLink] = useState("");
-<<<<<<< HEAD
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,19 +26,6 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
       addStep();
     }
   };
-=======
-  const [proInfo, setProInfo] = useState(stepOneInfo);
-  const initialState = {
-    errors: {},
-    success: false,
-    message: "",
-    data: {},
-  };
-
-  const [state, formAction] = useFormState(submitProfile, initialState);
-
-  const inputImageRef = useRef<HTMLInputElement | null>(null);
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
 
   const openBrowse = () => {
     inputImageRef.current?.click();
@@ -54,58 +35,40 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = Array.from(files)[0];
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewLink(imageUrl);
-      setProInfo((prev) => ({
-        ...prev,
-        photo: imageUrl,
-      }));
+      setPreviewLink(URL.createObjectURL(file));
     }
   };
 
-<<<<<<< HEAD
-  const handleChange = (field: string) => {
-    setErrors((prev) => {
-      const newErrors = { ...prev };
-      delete newErrors[field];
-      return newErrors;
-    });
-=======
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = event.target;
-    setProInfo((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+    const target = event.target;
+    const name = target.name;
 
-  const handleSubmit = () => {
-    const result = schemaStep.safeParse(proInfo);
-    if (!result.success) {
-      const fieldErrors: Partial<Record<string, string>> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0]] = err.message;
-        }
-      });
-      setErrors(fieldErrors);
-      return;
+    if (!name) return;
+
+    if (
+      name === "photo" &&
+      target instanceof HTMLInputElement &&
+      target.files &&
+      target.files.length > 0
+    ) {
+      const file = target.files[0];
+      setPreviewLink(URL.createObjectURL(file));
     }
 
-    setErrors({});
-    addStep();
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
+    if (errors[name]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   return (
     <form
-<<<<<<< HEAD
       onSubmit={handleSubmit}
-=======
-      action={formAction}
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
       encType="multipart/form-data"
       className="flex flex-col gap-y-6 w-[510px]"
     >
@@ -119,16 +82,9 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
           hidden
           onChange={handleInputChange}
         />
-<<<<<<< HEAD
 
         <div
-          className={` ${errors.photo ? "border-red-500" : "border-gray-300"}  border border-dashed w-40 h-40 rounded-full flex justify-center items-center`}
-=======
-        {errors.photo && <p className="text-red-500 text-sm">{errors.photo}</p>}
-
-        <div
-          className={`${errors.photo ? "border-red-500" : "border-gray-300"}  border border-dashed w-40 h-40 rounded-full flex justify-center items-center `}
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
+          className={`${errors.photo ? "border-red-500" : "border-gray-300"} border border-dashed w-40 h-40 rounded-full flex justify-center items-center`}
           onClick={openBrowse}
         >
           {previewLink ? (
@@ -151,56 +107,31 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
         <div className="flex flex-col gap-y-2">
           <p className="font-medium text-sm">Name</p>
           <Input
-<<<<<<< HEAD
-            onChange={() => handleChange("name")}
             placeholder="Enter your name here"
             name="name"
-=======
-            name="name"
-            value={proInfo.name}
-            onChange={handleChange}
-            placeholder="Enter your name here"
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
-            className={`${errors.name ? "border-red-500" : "border-gray-300"}`}
+            className={errors.name ? "border-red-500" : "border-gray-300"}
           />
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </div>
         <div className="flex flex-col gap-y-2 justify-start">
           <p className="font-medium text-sm">About</p>
           <textarea
-<<<<<<< HEAD
-            onChange={() => handleChange("about")}
             placeholder="Write about yourself here"
-            className={`h-[131px] border rounded-md ${errors.about ? "border-red-500" : "border-gray-300"} `}
+            className={`h-[131px] border rounded-md ${
+              errors.about ? "border-red-500" : "border-gray-300"
+            }`}
             name="about"
-=======
-            name="about"
-            value={proInfo.about}
-            onChange={handleChange}
-            placeholder="Write about yourself here"
-            className={`${errors.about ? "border-red-500" : "border-gray-300"} h-[131px] border rounded-md`}
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
           />
           {errors.about && (
             <p className="text-red-500 text-sm">{errors.about}</p>
           )}
         </div>
-
         <div className="flex flex-col gap-y-2">
           <p className="font-medium text-sm">Social media URL</p>
           <Input
-<<<<<<< HEAD
-            onChange={() => handleChange("social")}
             placeholder="https://"
             name="social"
-=======
-            placeholder="https://"
-            type="url"
-            name="social"
-            onChange={handleChange}
-            value={proInfo.social}
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
-            className={`${errors.social ? "border-red-500" : "border-gray-300"}`}
+            className={errors.social ? "border-red-500" : "border-gray-300"}
           />
           {errors.social && (
             <p className="text-red-500 text-sm">{errors.social}</p>
@@ -208,11 +139,7 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
         </div>
       </div>
 
-<<<<<<< HEAD
       <Button className="bg-gray-400" type="submit">
-=======
-      <Button className="bg-gray-400" onClick={handleSubmit}>
->>>>>>> 7d9b0606d3b7cd52c9d8ddbd09a15860188eb78d
         Continue
       </Button>
     </form>
