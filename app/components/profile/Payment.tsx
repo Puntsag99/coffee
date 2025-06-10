@@ -11,7 +11,7 @@ import {
 
 import { allCountries, month, years } from "@/app/lib";
 
-export const Payment = ({ previousStep, addStep }: StepProps) => {
+export const Payment = ({ previousStep }: StepProps) => {
   return (
     <div className="w-[510px] flex flex-col gap-y-12">
       <div className="flex flex-col gap-y-[6px]">

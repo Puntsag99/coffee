@@ -5,16 +5,14 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const schema = z.object({
-  photo: z
-    .instanceof(File)
-    .refine((file) => file.size > 0, "Photo is required"),
-  name: z.string().min(1, "Please enter name"),
-  about: z.string().min(1, "please enter into about yourself"),
-  social: z.string().url("Please enter a social link"),
-});
-
 export const saveProfile = async (formData: FormData, userId: string) => {
+  if (!userId) {
+    return {
+      success: false,
+      errors: { auth: ["Unauthorized. Please sign in again."] },
+    };
+  }
+
   const photo = formData.get("photo");
 
   if (!(photo instanceof File)) {
@@ -28,7 +26,7 @@ export const saveProfile = async (formData: FormData, userId: string) => {
     photo,
     name: formData.get("name")?.toString() || "",
     about: formData.get("about")?.toString() || "",
-    socialMediaURL: formData.get("social")?.toString() || "", // энд social-г socialMediaURL гэж өөрчиллөө
+    socialMediaURL: formData.get("social")?.toString() || "",
   };
 
   const schema = z.object({
@@ -49,14 +47,12 @@ export const saveProfile = async (formData: FormData, userId: string) => {
     };
   }
 
-  // TODO: photo-г хадгалах код (uploadPhoto гэх мэт)
-
   const savedProfile = await prisma.profile.create({
     data: {
       name: data.name,
       about: data.about,
       socialMediaURL: data.socialMediaURL,
-      avatarImage: "", // upload хийсний дараа URL-г оруулах
+      avatarImage: "",
       backroundImage: "",
       successMessage: "",
       userId: userId,

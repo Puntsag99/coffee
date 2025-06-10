@@ -1,20 +1,24 @@
 "use client";
 
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
 import { useRef, useState } from "react";
 import { saveProfile } from "@/app/actions";
 import { Input } from "@/components/ui/input";
 import { StepProps } from "@/app/profile/page";
 import { Button } from "@/components/ui/button";
-import { any } from "zod";
 
 export const ProfileInfo = ({ addStep }: StepProps) => {
-  const inputImageRef = useRef<HTMLInputElement | null>(null);
   const [previewLink, setPreviewLink] = useState("");
+  const inputImageRef = useRef<HTMLInputElement | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+
+  const { user } = useUser();
+  const userId = user?.id;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!userId) return;
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -109,6 +113,7 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
         <div className="flex flex-col gap-y-2">
           <p className="font-medium text-sm">Name</p>
           <Input
+            onChange={handleChange}
             placeholder="Enter your name here"
             name="name"
             className={errors.name ? "border-red-500" : "border-gray-300"}
@@ -118,6 +123,7 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
         <div className="flex flex-col gap-y-2 justify-start">
           <p className="font-medium text-sm">About</p>
           <textarea
+            onChange={handleChange}
             placeholder="Write about yourself here"
             className={`h-[131px] border rounded-md ${
               errors.about ? "border-red-500" : "border-gray-300"
@@ -131,12 +137,15 @@ export const ProfileInfo = ({ addStep }: StepProps) => {
         <div className="flex flex-col gap-y-2">
           <p className="font-medium text-sm">Social media URL</p>
           <Input
+            onChange={handleChange}
             placeholder="https://"
             name="social"
-            className={errors.social ? "border-red-500" : "border-gray-300"}
+            className={
+              errors.socialMediaURL ? "border-red-500" : "border-gray-300"
+            }
           />
-          {errors.social && (
-            <p className="text-red-500 text-sm">{errors.social}</p>
+          {errors.socialMediaURL && (
+            <p className="text-red-500 text-sm">{errors.socialMediaURL}</p>
           )}
         </div>
       </div>
